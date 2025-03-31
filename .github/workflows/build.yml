@@ -1,4 +1,4 @@
-name: Build Frontend and Backend
+name: Camera linux client
 
 on:
   push:
@@ -38,7 +38,6 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: stable
-          flutter-version: 3.27.1
 
       - name: Install packages
         run: flutter pub get
