@@ -35,6 +35,12 @@ jobs:
       - name: Upload linux artifact
         uses: actions/upload-artifact@v4
         with:
-          name: frontend-camera-linux
+          name: build output
+          path: ./build/linux
+
+      - name: Upload deb artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: deb output
           path: ./dist
 
