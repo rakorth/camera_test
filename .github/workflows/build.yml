@@ -12,13 +12,18 @@ jobs:
       - name: Clone repository
         uses: actions/checkout@v4
 
+      - name: Install linux packages
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y ninja-build libgtk-3-dev
+
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: master
           flutter-version: 3.27.1
 
-      - name: Install packages
+      - name: Install flutter packages
         run: flutter pub get
 
       - name: Build linux version
