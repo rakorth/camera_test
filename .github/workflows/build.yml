@@ -35,9 +35,10 @@ jobs:
             ${{ runner.os }}-m2
 
       - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: stable
+        run: |
+          git clone --depth 1 https://github.com/ardera/flutter-engine-binaries-for-arm.git engine-binaries
+          cd engine-binaries
+          ./install.sh
 
       - name: Install packages
         run: flutter pub get
