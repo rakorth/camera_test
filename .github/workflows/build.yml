@@ -38,7 +38,7 @@ jobs:
         run: |
           git clone --depth 1 https://github.com/ardera/flutter-engine-binaries-for-arm.git engine-binaries
           cd engine-binaries
-          ./install.sh
+          sudo ./install.sh
 
       - name: Install packages
         run: flutter pub get
