@@ -42,6 +42,7 @@ dependencies:
   camera: ^0.11.1
   camera_windows: ^0.2.6+2
   camera_linux: ^0.0.8
+  opencv_dart: ^1.4.1
 
   font_awesome_flutter: ^10.8.0
 
