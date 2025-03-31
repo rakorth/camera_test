@@ -36,9 +36,16 @@ jobs:
 
       - name: Set up Flutter
         run: |
-          git clone --depth 1 https://github.com/ardera/flutter-engine-binaries-for-arm.git engine-binaries
-          cd engine-binaries
-          sudo ./install.sh
+          git clone https://github.com/flutter/flutter.git $HOME/development/flutter
+          cd $HOME/development/flutter && git checkout stable
+
+      - name: Setup flutter cache
+        run : |
+          mkdir -p $HOME/development/flutter/bin/cache
+          export PATH=$PATH:$HOME/development/flutter/bin
+
+      - name: Doctor
+        run: flutter doctor
 
       - name: Install packages
         run: flutter pub get
