@@ -26,6 +26,9 @@ jobs:
       - name: Install flutter packages
         run: flutter pub get
 
+      - name: Install flutter_distributor
+        run: dart pub global activate flutter_distributor
+
       - name: Build linux version
         run: flutter_distributor release --name=dev --jobs=release-dev-linux-deb
 
