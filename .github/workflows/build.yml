@@ -26,24 +26,12 @@ jobs:
       - name: Install flutter packages
         run: flutter pub get
 
-      - name: Setup fastforge
-        run: dart pub global activate fastforge
-
       - name: Build linux version
-        run: flutter build linux --release --target-platform linux-arm64
-
-      - name: Build deb package
-        run: fastforge release --name dev
+        run: flutter_distributor release --name=dev --jobs=release-dev-linux-deb
 
       - name: Upload linux artifact
         uses: actions/upload-artifact@v4
         with:
-          name: build output
-          path: ./build/linux
-
-      - name: Upload linux artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: deb output
+          name: frontend-camera-linux
           path: ./dist
 
