@@ -1,0 +1,33 @@
+display_name: cameratest
+package_name: cameratest
+
+maintainer:
+  name: rakorth
+  email: rakorth@rakorth.net
+
+priority: optional
+
+section: x11
+
+installed_size: 15700
+
+dependencies:
+  - mpv
+
+essential: false
+
+icon: linux/assets/icon.png
+
+postuninstall_scripts:
+  - echo "Sorry to see you go."
+
+keywords:
+  - Camera
+
+generic_name: Camera Test
+
+categories:
+  - Development
+  - Utility
+
+startup_notify: true

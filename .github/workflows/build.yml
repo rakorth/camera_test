@@ -27,11 +27,11 @@ jobs:
         run: flutter pub get
 
       - name: Build linux version
-        run: flutter build linux --release --target-platform linux-arm64
+        run: flutter_distributor release --name=dev --jobs=release-dev-linux-deb
 
       - name: Upload linux artifact
         uses: actions/upload-artifact@v4
         with:
           name: frontend-camera-linux
-          path: ./build/linux
+          path: ./dist
 
