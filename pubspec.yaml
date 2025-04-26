@@ -38,9 +38,8 @@ dependencies:
   bloc: ^9.0.0
   equatable: ^2.0.7
 
-  permission_handler: ^11.4.0
-  camera: ^0.11.1
-  camera_windows: ^0.2.6+2
+  permission_handler: ^12.0.0+1
+
   camera_linux: ^0.0.8
 
   font_awesome_flutter: ^10.8.0

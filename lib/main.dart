@@ -1,65 +1,89 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'package:flutter/services.dart';
+import 'package:camera_linux/camera_linux.dart';
 
-late List<CameraDescription> _cameras;
-
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  _cameras = await availableCameras();
-  runApp(const CameraApp());
+void main() {
+  runApp(const MyApp());
 }
 
-/// CameraApp is the Main Application.
-class CameraApp extends StatefulWidget {
-  /// Default Constructor
-  const CameraApp({super.key});
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
 
   @override
-  State<CameraApp> createState() => _CameraAppState();
+  State<MyApp> createState() => _MyAppState();
 }
 
-class _CameraAppState extends State<CameraApp> {
-  late CameraController controller;
+class _MyAppState extends State<MyApp> {
+  final _cameraLinuxPlugin = CameraLinux();
+  bool _isCameraOpen = false;
+  late String _base64Image;
 
   @override
   void initState() {
     super.initState();
-    controller = CameraController(_cameras[0], ResolutionPreset.max);
-    controller.initialize().then((_) {
-      if (!mounted) {
-        return;
-      }
-      setState(() {});
-    }).catchError((Object e) {
-      print(e);
+    _initializeCamera();
+  }
 
-      if (e is CameraException) {
-        switch (e.code) {
-          case 'CameraAccessDenied':
-          // Handle access errors here.
-            break;
-          default:
-          // Handle other errors here.
-            break;
-        }
-      }
+  // Open Default Camera
+  Future<void> _initializeCamera() async {
+    await _cameraLinuxPlugin.initializeCamera();
+  }
+
+  // Capture The Image
+  void _captureImage() async {
+    _base64Image = await _cameraLinuxPlugin.captureImage();
+    setState(() {
+      _isCameraOpen = true;
+    });
+  }
+
+  // Close The Camera
+  void _stopCamera() {
+    _cameraLinuxPlugin.stopCamera();
+    setState(() {
+      _isCameraOpen = false;
     });
   }
 
   @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    if (!controller.value.isInitialized) {
-      return Container();
-    }
     return MaterialApp(
-      home: CameraPreview(controller),
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Plugin example app'),
+        ),
+        body: Column(
+          children: [
+            _isCameraOpen
+                ? Image.memory(
+              base64Decode(_base64Image),
+              width: 500,
+              height: 400,
+            )
+                : Text("Loading"),
+            Center(
+              child: TextButton(
+                onPressed: _initializeCamera,
+                child: const Text("Start"),
+              ),
+            ),
+            Center(
+              child: TextButton(
+                onPressed: _captureImage,
+                child: const Text("Capture"),
+              ),
+            ),
+            Center(
+              child: TextButton(
+                onPressed: _stopCamera,
+                child: const Text("Stop Camera"),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
