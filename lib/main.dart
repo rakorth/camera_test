@@ -81,7 +81,7 @@ class _CameraAppState extends State<CameraApp> {
 
     // Schedule the next frame
     if (_shouldCapture) {
-      Future.delayed(const Duration(milliseconds: 30), _captureFrames);
+      Future.delayed(const Duration(milliseconds:1), _captureFrames);
     }
   }
 
