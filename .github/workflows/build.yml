@@ -1,6 +1,7 @@
 name: Camera linux client
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - 'main'
