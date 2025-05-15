@@ -1,11 +1,12 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
-
-import 'package:flutter/services.dart';
-import 'package:flutter_lite_camera/flutter_lite_camera.dart';
 import 'dart:ui' as ui;
 
-void main() {
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_lite_camera/flutter_lite_camera.dart';
+import 'package:window_manager/window_manager.dart';
+
+Future<void> main() async {
   runApp(const MyApp());
 }
 
@@ -69,8 +70,7 @@ class _CameraAppState extends State<CameraApp> {
     if (!_isCameraOpened || !_shouldCapture) return;
 
     try {
-      Map<String, dynamic> frame =
-      await _flutterLiteCameraPlugin.captureFrame();
+      Map<String, dynamic> frame = await _flutterLiteCameraPlugin.captureFrame();
       if (frame.containsKey('data')) {
         Uint8List rgbBuffer = frame['data'];
         await _convertBufferToImage(rgbBuffer, frame['width'], frame['height']);
@@ -81,12 +81,11 @@ class _CameraAppState extends State<CameraApp> {
 
     // Schedule the next frame
     if (_shouldCapture) {
-      Future.delayed(const Duration(milliseconds:1), _captureFrames);
+      Future.delayed(const Duration(milliseconds: 1), _captureFrames);
     }
   }
 
-  Future<void> _convertBufferToImage(
-      Uint8List rgbBuffer, int width, int height) async {
+  Future<void> _convertBufferToImage(Uint8List rgbBuffer, int width, int height) async {
     final pixels = Uint8List(width * height * 4); // RGBA buffer
 
     for (int i = 0; i < width * height; i++) {
@@ -202,6 +201,12 @@ class _CameraAppState extends State<CameraApp> {
                 ElevatedButton(
                   onPressed: !_isCapturing ? null : () => _stopCamera(),
                   child: const Text('Stop'),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    await WindowManager.instance.setFullScreen(false);
+                  },
+                  child: Text("Full"),
                 ),
               ],
             ),
