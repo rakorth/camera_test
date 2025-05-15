@@ -153,6 +153,33 @@ class _CameraAppState extends State<CameraApp> {
     return Scaffold(
       body: Stack(
         children: [
+          Positioned(
+            bottom: 20,
+            left: 20,
+            right: 20,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                // Start Button
+                ElevatedButton(
+                  onPressed: _isCapturing ? null : () => _startCamera(),
+                  child: const Text('Start'),
+                ),
+                // Stop Button
+                ElevatedButton(
+                  onPressed: !_isCapturing ? null : () => _stopCamera(),
+                  child: const Text('Stop'),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    await WindowManager.instance.setFullScreen(false);
+                  },
+                  child: Text("Full"),
+                ),
+              ],
+            ),
+          ),
+
           if (_latestFrame != null)
             LayoutBuilder(
               builder: (context, constraints) {
@@ -185,32 +212,7 @@ class _CameraAppState extends State<CameraApp> {
             Center(
               child: Text('Camera not initialized or no frame captured'),
             ),
-          Positioned(
-            bottom: 20,
-            left: 20,
-            right: 20,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                // Start Button
-                ElevatedButton(
-                  onPressed: _isCapturing ? null : () => _startCamera(),
-                  child: const Text('Start'),
-                ),
-                // Stop Button
-                ElevatedButton(
-                  onPressed: !_isCapturing ? null : () => _stopCamera(),
-                  child: const Text('Stop'),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    await WindowManager.instance.setFullScreen(false);
-                  },
-                  child: Text("Full"),
-                ),
-              ],
-            ),
-          ),
+
         ],
       ),
     );
