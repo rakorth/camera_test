@@ -18,6 +18,41 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y ninja-build libgtk-3-dev libopencv-dev
 
+      - name: Install yq (YAML processor)
+        run: |
+          sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
+          sudo chmod +x /usr/bin/yq
+
+      - name: Increment app version in pubspec.yaml
+        run: |
+          current_version=$(yq '.version' pubspec.yaml)
+          version_num=$(echo $current_version | cut -d "+" -f1)
+          build_num=$(echo $current_version | cut -d "+" -f2)
+          IFS='.' read -r major minor patch <<< "$version_num"
+          patch=$((patch + 1))
+          new_version="$major.$minor.$patch"
+          # If build number exists, keep it; else default to 1
+          if [ -z "$build_num" ]; then
+            new_version_str="$new_version"
+          else
+            new_version_str="$new_version+$build_num"
+          fi
+          yq -i ".version = \"$new_version_str\"" pubspec.yaml
+          echo "Updated version to $new_version_str"
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit and push new version
+        run: |
+          git add pubspec.yaml
+          git commit -m "ci: bump version [skip ci]" || echo "No changes to commit"
+          git push origin HEAD:${GITHUB_REF#refs/heads/}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
