@@ -41,13 +41,13 @@ class _CameraAppState extends State<CameraApp> {
     _handleWindowClose();
   }
 
-  Future<void> _startCamera() async {
+  Future<void> _startCamera(int index) async {
     try {
       List<String> devices = await _flutterLiteCameraPlugin.getDeviceList();
       if (devices.isNotEmpty) {
         print("Available Devices: $devices");
-        print("Opening camera 0");
-        bool opened = await _flutterLiteCameraPlugin.open(1);
+        print("Opening camera $index");
+        bool opened = await _flutterLiteCameraPlugin.open(index);
         if (opened) {
           setState(() {
             _isCameraOpened = true;
@@ -62,7 +62,7 @@ class _CameraAppState extends State<CameraApp> {
         }
       }
     } catch (e) {
-      // print("Error initializing camera: $e");
+      print("Error initializing camera: $e");
     }
   }
 
@@ -196,8 +196,20 @@ class _CameraAppState extends State<CameraApp> {
               children: [
                 // Start Button
                 ElevatedButton(
-                  onPressed: _isCapturing ? null : () => _startCamera(),
-                  child: const Text('Start'),
+                  onPressed: _isCapturing ? null : () => _startCamera(0),
+                  child: const Text('Start 0'),
+                ),
+                ElevatedButton(
+                  onPressed: _isCapturing ? null : () => _startCamera(1),
+                  child: const Text('Start 1'),
+                ),
+                ElevatedButton(
+                  onPressed: _isCapturing ? null : () => _startCamera(2),
+                  child: const Text('Start 2'),
+                ),
+                ElevatedButton(
+                  onPressed: _isCapturing ? null : () => _startCamera(3),
+                  child: const Text('Start 2'),
                 ),
                 // Stop Button
                 ElevatedButton(
