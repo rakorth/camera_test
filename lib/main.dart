@@ -47,7 +47,7 @@ class _CameraAppState extends State<CameraApp> {
       if (devices.isNotEmpty) {
         print("Available Devices: $devices");
         print("Opening camera 0");
-        bool opened = await _flutterLiteCameraPlugin.open(0);
+        bool opened = await _flutterLiteCameraPlugin.open(1);
         if (opened) {
           setState(() {
             _isCameraOpened = true;
@@ -70,7 +70,8 @@ class _CameraAppState extends State<CameraApp> {
     if (!_isCameraOpened || !_shouldCapture) return;
 
     try {
-      Map<String, dynamic> frame = await _flutterLiteCameraPlugin.captureFrame();
+      Map<String, dynamic> frame =
+          await _flutterLiteCameraPlugin.captureFrame();
       if (frame.containsKey('data')) {
         Uint8List rgbBuffer = frame['data'];
         await _convertBufferToImage(rgbBuffer, frame['width'], frame['height']);
@@ -85,7 +86,8 @@ class _CameraAppState extends State<CameraApp> {
     }
   }
 
-  Future<void> _convertBufferToImage(Uint8List rgbBuffer, int width, int height) async {
+  Future<void> _convertBufferToImage(
+      Uint8List rgbBuffer, int width, int height) async {
     final pixels = Uint8List(width * height * 4); // RGBA buffer
 
     for (int i = 0; i < width * height; i++) {
@@ -153,33 +155,6 @@ class _CameraAppState extends State<CameraApp> {
     return Scaffold(
       body: Stack(
         children: [
-          Positioned(
-            bottom: 20,
-            left: 20,
-            right: 20,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                // Start Button
-                ElevatedButton(
-                  onPressed: _isCapturing ? null : () => _startCamera(),
-                  child: const Text('Start'),
-                ),
-                // Stop Button
-                ElevatedButton(
-                  onPressed: !_isCapturing ? null : () => _stopCamera(),
-                  child: const Text('Stop'),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    await WindowManager.instance.setFullScreen(false);
-                  },
-                  child: Text("Full"),
-                ),
-              ],
-            ),
-          ),
-
           if (_latestFrame != null)
             LayoutBuilder(
               builder: (context, constraints) {
@@ -212,7 +187,32 @@ class _CameraAppState extends State<CameraApp> {
             Center(
               child: Text('Camera not initialized or no frame captured'),
             ),
-
+          Positioned(
+            bottom: 20,
+            left: 20,
+            right: 20,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                // Start Button
+                ElevatedButton(
+                  onPressed: _isCapturing ? null : () => _startCamera(),
+                  child: const Text('Start'),
+                ),
+                // Stop Button
+                ElevatedButton(
+                  onPressed: !_isCapturing ? null : () => _stopCamera(),
+                  child: const Text('Stop'),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    await WindowManager.instance.setFullScreen(false);
+                  },
+                  child: Text("Full"),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
