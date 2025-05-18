@@ -6,6 +6,10 @@ on:
     branches:
       - 'main'
 
+permissions:
+  contents: write
+
+
 jobs:
   build-camera-test:
     runs-on: ubuntu-22.04-arm
